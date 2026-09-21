@@ -1,8 +1,8 @@
 import z from "zod";
 import type { McpServer } from "@modelcontextprotocol/server";
-import { getIssue } from "../github.js";
-import { repoField, summarySchema } from "../schemas.js";
-import { readOnlyAnnotations, jsonResult, errorResult } from "../tool-result.js";
+import { getIssue } from "../github/index.js";
+import { repoField, summarySchema } from "./schemas.js";
+import { readOnlyAnnotations, jsonResult, errorResult } from "./result.js";
 import { getIssueDescription } from "./descriptions.js";
 
 export function registerGetIssueTool(server: McpServer): void {

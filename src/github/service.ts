@@ -1,6 +1,6 @@
-import { cleanBody } from "./format.js";
-import { getLastRateLimit, request } from "./github-client.js";
-import { parseRepo, toSummary } from "./github-mappers.js";
+import { cleanBody } from "../utils/format.js";
+import { getLastRateLimit, request } from "./client.js";
+import { parseRepo, toSummary } from "./mappers.js";
 import type { IssueComment, IssueDetail, IssueSummary, RawComment, RawIssue } from "./types.js";
 
 export { getLastRateLimit };

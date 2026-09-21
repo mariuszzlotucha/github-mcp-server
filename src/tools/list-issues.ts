@@ -1,8 +1,8 @@
 import z from "zod";
 import type { McpServer } from "@modelcontextprotocol/server";
-import { listIssues, getLastRateLimit } from "../github.js";
-import { repoField, summarySchema } from "../schemas.js";
-import { readOnlyAnnotations, jsonResult, errorResult } from "../tool-result.js";
+import { listIssues, getLastRateLimit } from "../github/index.js";
+import { repoField, summarySchema } from "./schemas.js";
+import { readOnlyAnnotations, jsonResult, errorResult } from "./result.js";
 import { listIssuesDescription } from "./descriptions.js";
 
 export function registerListIssuesTool(server: McpServer): void {

@@ -1,6 +1,6 @@
 import type { RateLimit } from "./types.js";
 
-const API = "https://api.github.com";
+const API = process.env.GITHUB_API_URL ?? "https://api.github.com";
 
 function buildHeaders(): Record<string, string> {
     const headers: Record<string, string> = {

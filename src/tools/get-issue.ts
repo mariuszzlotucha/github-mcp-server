@@ -9,11 +9,11 @@ export function registerGetIssueTool(server: McpServer): void {
     server.registerTool(
         'get_issue',
         {
-            title: 'Treść zgłoszenia',
+            title: 'Issue content',
             description: getIssueDescription,
             inputSchema: z.object({
                 repo: repoField,
-                number: z.number().int().positive().describe("Numer zgłoszenia z list_issues")
+                number: z.number().int().positive().describe("Issue number from list_issues")
             }),
             outputSchema: summarySchema.extend({
                 body: z.string(),

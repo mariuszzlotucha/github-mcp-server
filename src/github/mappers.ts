@@ -4,7 +4,7 @@ export function parseRepo(repo: string): { owner: string; name: string } {
     // microsoft/vscode
     const match = /^([\w.-]+)\/([\w.-]+)$/.exec(repo.trim());
     if (!match?.[1] || !match[2]) {
-        throw new Error("Nieprawidłowa nazwa repozytorium");
+        throw new Error("Invalid repository name");
     }
 
     return { owner: match[1], name: match[2] };
@@ -15,7 +15,7 @@ export function toSummary(raw: RawIssue): IssueSummary {
         number: raw.number,
         title: raw.title,
         state: raw.state,
-        author: raw.user?.login ?? '(nieznany)',
+        author: raw.user?.login ?? '(unknown)',
         createdAt: raw.created_at,
         updatedAt: raw.updated_at,
         labels: raw.labels.map((l) => (typeof l === 'string' ? l : (l.name ?? ''))).filter(Boolean),
@@ -33,7 +33,7 @@ export function toPullRequestSummary(
         title: raw.title,
         description: description.text,
         descriptionTruncated: description.truncated,
-        author: raw.user?.login ?? '(nieznany)',
+        author: raw.user?.login ?? '(unknown)',
         state: raw.state,
         url: raw.html_url
     };

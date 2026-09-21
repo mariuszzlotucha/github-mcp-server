@@ -1,72 +1,72 @@
 # github-mcp-server
 
-Serwer [MCP](https://modelcontextprotocol.io) udostępniający modelom cztery narzędzia tylko do odczytu, do przeglądania zgłoszeń (issues) i pull requestów w repozytoriach na GitHubie: `list_issues`, `get_issue`, `list_pull_requests`, `get_pull_request`.
+An [MCP](https://modelcontextprotocol.io) server exposing four read-only tools for browsing issues and pull requests in GitHub repositories: `list_issues`, `get_issue`, `list_pull_requests`, `get_pull_request`.
 
-## Wymagania
+## Requirements
 
-- Node.js 24+ (używa `--env-file-if-exists`)
+- Node.js 24+ (uses `--env-file-if-exists`)
 
-## Instalacja
+## Setup
 
 ```bash
 npm install
 cp .env.example .env
 ```
 
-Uzupełnij `.env`:
+Fill in `.env`:
 
-| Zmienna | Wymagana | Opis |
+| Variable | Required | Description |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | nie | Personal access token GitHuba. Bez niego działa na anonimowym limicie 60 żądań/h zamiast 5000/h i nie widzi prywatnych repo. |
-| `GITHUB_API_URL` | nie | Bazowy URL REST API. Zmień tylko dla GitHub Enterprise Server. Domyślnie `https://api.github.com`. |
-| `HOST` | nie | Interfejs nasłuchu dla trybu HTTP (`src/http.ts`). Domyślnie `0.0.0.0`. |
-| `PORT` | nie | Port dla trybu HTTP. Domyślnie `8080`. |
+| `GITHUB_TOKEN` | no | GitHub personal access token. Without it the server runs on the anonymous rate limit (60 req/h instead of 5000/h) and can't see private repos. |
+| `GITHUB_API_URL` | no | Base REST API URL. Only change it for GitHub Enterprise Server. Defaults to `https://api.github.com`. |
+| `HOST` | no | Listen interface for HTTP mode (`src/http.ts`). Defaults to `0.0.0.0`. |
+| `PORT` | no | Port for HTTP mode. Defaults to `8080`. |
 
-`.env` jest w `.gitignore` — nie trafia do repozytorium.
+`.env` is gitignored — it never gets committed.
 
-## Uruchamianie
+## Running
 
 ```bash
-npm run dev     # tryb stdio z hot-reloadem (tsx watch)
-npm run build   # kompilacja do dist/
-npm start       # tryb stdio ze skompilowanego dist/server.js
-npm run inspect # MCP Inspector do ręcznego testowania narzędzi
+npm run dev     # stdio mode with hot reload (tsx watch)
+npm run build   # compile to dist/
+npm start       # stdio mode from compiled dist/server.js
+npm run inspect # MCP Inspector for manually testing the tools
 ```
 
-Domyślny entrypoint (`src/server.ts`) serwuje przez stdio — do podpięcia pod klienta MCP (np. Claude Code) jako lokalny serwer. `src/http.ts` to alternatywny entrypoint wystawiający ten sam serwer pod `/mcp` przez HTTP oraz `/healthz` do healthchecków.
+The default entrypoint (`src/server.ts`) serves over stdio — for wiring into an MCP client (e.g. Claude Code) as a local server. `src/http.ts` is an alternative entrypoint exposing the same server over HTTP at `/mcp`, plus `/healthz` for health checks.
 
-## Narzędzia
+## Tools
 
-- **`list_issues(repo, state?, labels?, limit?)`** — nagłówki zgłoszeń (numer, tytuł, autor, stan, etykiety, liczba komentarzy) bez treści. Pull requesty są odfiltrowane.
-- **`get_issue(repo, number)`** — pełna treść jednego zgłoszenia wraz z komentarzami, z obcinaniem długich treści.
-- **`list_pull_requests(repo, state?, limit?)`** — lista pull requestów: numer, tytuł, opis (obcięty do 300 znaków), autor, stan, URL.
-- **`get_pull_request(repo, number)`** — szczegóły PR-a: pełny opis, lista zmienionych plików z faktycznym diffem (`patch`) oraz liczbą dodanych/usuniętych linijek per plik i łącznie (`additions`/`deletions`/`changedFiles`). Diff pojedynczego pliku jest obcinany do 3000 znaków, a lista plików do 30 — flagi `patchTruncated`/`filesTruncated`/`descriptionTruncated` sygnalizują obcięcie.
+- **`list_issues(repo, state?, labels?, limit?)`** — issue headers (number, title, author, state, labels, comment count) without content. Pull requests are filtered out.
+- **`get_issue(repo, number)`** — full content of a single issue plus its comments, with long content truncated.
+- **`list_pull_requests(repo, state?, limit?)`** — list of pull requests: number, title, description (truncated to 300 characters), author, state, URL.
+- **`get_pull_request(repo, number)`** — PR details: full description, list of changed files with the actual diff (`patch`) plus added/removed line counts per file and overall (`additions`/`deletions`/`changedFiles`). A single file's diff is truncated to 3000 characters, and the file list to 30 — the `patchTruncated`/`filesTruncated`/`descriptionTruncated` flags signal truncation.
 
-Wszystkie narzędzia są oznaczone jako `readOnlyHint` i nie modyfikują niczego na GitHubie.
+All tools are marked `readOnlyHint` and never modify anything on GitHub.
 
-## Struktura projektu
+## Project structure
 
 ```
 src/
-├── server.ts          # entrypoint: MCP przez stdio
-├── http.ts             # entrypoint: MCP przez HTTP (/mcp, /healthz)
-├── github/              # komunikacja z GitHub API + logika domenowa
-│   ├── index.ts           # barrel: publiczne API modułu
-│   ├── client.ts            # fetch do GitHub REST API, obsługa rate limitu
-│   ├── mappers.ts             # mapowanie odpowiedzi API -> typy domenowe
+├── server.ts          # entrypoint: MCP over stdio
+├── http.ts             # entrypoint: MCP over HTTP (/mcp, /healthz)
+├── github/              # GitHub API communication + domain logic
+│   ├── index.ts           # barrel: module's public API
+│   ├── client.ts            # fetch to the GitHub REST API, rate-limit handling
+│   ├── mappers.ts             # mapping API responses -> domain types
 │   ├── service.ts               # listIssues / getIssue / listPullRequests / getPullRequest
-│   └── types.ts                  # typy Raw* (GitHub API) i Issue*/PullRequest* (domenowe)
-├── tools/                # rejestracja narzędzi MCP
-│   ├── index.ts             # barrel: rejestratory narzędzi
-│   ├── descriptions.ts        # opisy narzędzi dla modelu
+│   └── types.ts                  # Raw* (GitHub API) and Issue*/PullRequest* (domain) types
+├── tools/                # MCP tool registration
+│   ├── index.ts             # barrel: tool registrars
+│   ├── descriptions.ts        # tool descriptions for the model
 │   ├── list-issues.ts
 │   ├── get-issue.ts
 │   ├── list-pull-requests.ts
 │   ├── get-pull-request.ts
-│   ├── schemas.ts               # współdzielone schematy zod
-│   └── result.ts                 # helpery jsonResult/errorResult
+│   ├── schemas.ts               # shared zod schemas
+│   └── result.ts                 # jsonResult/errorResult helpers
 └── utils/
-    └── format.ts          # czyszczenie i obcinanie treści (HTML, whitespace)
+    └── format.ts          # content cleanup and truncation (HTML, whitespace)
 ```
 
-Importuj z `../github/index.js`, nie z `../github/service.js` bezpośrednio — barrel jest publicznym kontraktem modułu.
+Import from `../github/index.js`, not `../github/service.js` directly — the barrel is the module's public contract.

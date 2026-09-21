@@ -9,11 +9,11 @@ export function registerGetPullRequestTool(server: McpServer): void {
     server.registerTool(
         'get_pull_request',
         {
-            title: 'Szczegóły pull requesta',
+            title: 'Pull request details',
             description: getPullRequestDescription,
             inputSchema: z.object({
                 repo: repoField,
-                number: z.number().int().positive().describe("Numer pull requesta z list_pull_requests")
+                number: z.number().int().positive().describe("Pull request number from list_pull_requests")
             }),
             outputSchema: pullRequestSummarySchema.extend({
                 additions: z.number(),

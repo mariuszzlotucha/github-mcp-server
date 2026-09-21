@@ -38,17 +38,17 @@ export async function request<T>(path: string): Promise<T> {
 
     if (res.status === 403 && lastRateLimit.remaining === 0) {
         throw new Error(
-            `Wyczerpany limit żądań (${lastRateLimit.limit}/h). ` +
-                `Odnowi się ${lastRateLimit.resetsAt ?? 'wkrótce'}.`,
+            `Rate limit exhausted (${lastRateLimit.limit}/h). ` +
+                `Resets ${lastRateLimit.resetsAt ?? 'soon'}.`,
         );
     }
     if (res.status === 401) {
-        throw new Error('Token GITHUB_TOKEN jest nieprawidłowy lub wygasł.');
+        throw new Error('GITHUB_TOKEN is invalid or expired.');
     }
     if (res.status === 404) {
         throw new Error(
-            'Nie znaleziono. Repozytorium nie istnieje, jest prywatne, albo podany numer jest zły.'
+            'Not found. The repository does not exist, is private, or the given number is wrong.'
         );
     }
-    throw new Error(`GitHub zwrócił ${res.status} ${res.statusText}`);
+    throw new Error(`GitHub returned ${res.status} ${res.statusText}`);
 }

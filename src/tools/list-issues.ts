@@ -9,15 +9,15 @@ export function registerListIssuesTool(server: McpServer): void {
     server.registerTool(
         'list_issues',
         {
-            title: 'Lista zgłoszeń',
+            title: 'List issues',
             description: listIssuesDescription,
             inputSchema: z.object({
                 repo: repoField,
                 state: z.enum(['open', 'closed', 'all'])
                     .default('open')
-                    .describe('Stan zgłoszeń. Domyślnie tylko otwarte'),
-                labels: z.string().optional().describe('Opcjonalny filtr etykiet, po przecinku, np. "bug,help wanted"'),
-                limit: z.number().int().min(1).max(10).default(10).describe("Ile zgłoszeń zwrócić (max. 10)")
+                    .describe('Issue state. Defaults to open only'),
+                labels: z.string().optional().describe('Optional comma-separated label filter, e.g. "bug,help wanted"'),
+                limit: z.number().int().min(1).max(10).default(10).describe("How many issues to return (max. 10)")
             }),
             outputSchema: z.object({
                 count: z.number(),

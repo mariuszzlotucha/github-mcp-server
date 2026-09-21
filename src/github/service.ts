@@ -52,7 +52,7 @@ export async function getIssue(repo: string, issueNumber: number): Promise<Issue
 
     if ('pull_request' in raw) {
         throw new Error(
-            `#${issueNumber} to pull request, nie zgłoszenie. To narzędzie obsługuje tylko zgłoszenia.`
+            `#${issueNumber} is a pull request, not an issue. This tool only handles issues.`
         );
     }
 
@@ -64,7 +64,7 @@ export async function getIssue(repo: string, issueNumber: number): Promise<Issue
         comments = rawComments.map((c) => {
             const cleaned = cleanBody(c.body, 250);
             return {
-                author: c.user?.login ?? '(nieznany)',
+                author: c.user?.login ?? '(unknown)',
                 createdAt: c.created_at,
                 body: cleaned.text,
                 truncated: cleaned.truncated
@@ -112,7 +112,7 @@ export async function getPullRequest(repo: string, prNumber: number): Promise<Pu
     const files: PullRequestFile[] = rawFiles.slice(0, MAX_FILES).map((f) => {
         const patch = f.patch
             ? truncate(f.patch, PATCH_MAX_CHARS)
-            : { text: '(brak podglądu zmian - plik binarny lub zbyt duży)', truncated: false };
+            : { text: '(no diff available - binary file or too large)', truncated: false };
 
         return {
             filename: f.filename,

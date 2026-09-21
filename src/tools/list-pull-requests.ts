@@ -9,14 +9,14 @@ export function registerListPullRequestsTool(server: McpServer): void {
     server.registerTool(
         'list_pull_requests',
         {
-            title: 'Lista pull requestów',
+            title: 'List pull requests',
             description: listPullRequestsDescription,
             inputSchema: z.object({
                 repo: repoField,
                 state: z.enum(['open', 'closed', 'all'])
                     .default('open')
-                    .describe('Stan pull requestów. Domyślnie tylko otwarte'),
-                limit: z.number().int().min(1).max(10).default(10).describe("Ile pull requestów zwrócić (max. 10)")
+                    .describe('Pull request state. Defaults to open only'),
+                limit: z.number().int().min(1).max(10).default(10).describe("How many pull requests to return (max. 10)")
             }),
             outputSchema: z.object({
                 count: z.number(),

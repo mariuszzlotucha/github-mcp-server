@@ -26,5 +26,5 @@ const httpServer = createServer((req, res) => {
 });
 
 httpServer.listen(PORT, HOST, () => {
-    console.error(`[github-server] HTTP na http://${HOST}:${PORT}/mcp`);
+    console.error(`[github-server] HTTP on http://${HOST}:${PORT}/mcp`);
 });

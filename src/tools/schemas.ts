@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const repoField = z.string().describe('Repozytorium w formacie właściciel/nazwa');
+export const repoField = z.string().describe('Repository in owner/name format');
 
 export const summarySchema = z.object({
   number: z.number(),

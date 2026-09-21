@@ -21,7 +21,7 @@ export function truncate(
         return { text, truncated: false, originalLength };
     }
     return {
-        text: `${text.slice(0, maxChars)}\n\n[...obcięto, oryginał ma ${originalLength} znaków...]`,
+        text: `${text.slice(0, maxChars)}\n\n[...truncated, original is ${originalLength} characters...]`,
         truncated: true,
         originalLength
     };

@@ -47,7 +47,7 @@ export async function request<T>(path: string): Promise<T> {
     }
     if (res.status === 404) {
         throw new Error(
-            'Nie znaleziono. Repozytorium nie istnieje, jest prywatne, albo numer zgłoszenia jest zły.'
+            'Nie znaleziono. Repozytorium nie istnieje, jest prywatne, albo podany numer jest zły.'
         );
     }
     throw new Error(`GitHub zwrócił ${res.status} ${res.statusText}`);

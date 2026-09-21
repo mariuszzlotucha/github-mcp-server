@@ -13,3 +13,13 @@ export const summarySchema = z.object({
   commentCount: z.number(),
   url: z.string()
 });
+
+export const pullRequestSummarySchema = z.object({
+  number: z.number(),
+  title: z.string(),
+  description: z.string(),
+  descriptionTruncated: z.boolean(),
+  author: z.string(),
+  state: z.string(),
+  url: z.string()
+});

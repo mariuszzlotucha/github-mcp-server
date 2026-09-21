@@ -1,6 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
-import { registerListIssuesTool, registerGetIssueTool } from "./tools/index.js";
+import {
+    registerListIssuesTool,
+    registerGetIssueTool,
+    registerListPullRequestsTool,
+    registerGetPullRequestTool
+} from "./tools/index.js";
 
 export function createMcpServer(): McpServer {
     const server = new McpServer(
@@ -10,6 +15,8 @@ export function createMcpServer(): McpServer {
 
     registerListIssuesTool(server);
     registerGetIssueTool(server);
+    registerListPullRequestsTool(server);
+    registerGetPullRequestTool(server);
 
     return server;
 }

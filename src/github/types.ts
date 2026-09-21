@@ -49,3 +49,50 @@ export type RateLimit = {
     limit: number;
     resetsAt: string | null;
 }
+
+export type RawPullRequest = {
+    number: number;
+    title: string;
+    state: string;
+    body: string | null;
+    html_url: string;
+    user: { login: string } | null;
+    additions?: number;
+    deletions?: number;
+    changed_files?: number;
+}
+
+export type RawPullRequestFile = {
+    filename: string;
+    status: string;
+    additions: number;
+    deletions: number;
+    patch?: string;
+}
+
+export type PullRequestSummary = {
+    number: number;
+    title: string;
+    description: string;
+    descriptionTruncated: boolean;
+    author: string;
+    state: string;
+    url: string;
+}
+
+export type PullRequestFile = {
+    filename: string;
+    status: string;
+    additions: number;
+    deletions: number;
+    patch: string;
+    patchTruncated: boolean;
+}
+
+export type PullRequestDetail = PullRequestSummary & {
+    additions: number;
+    deletions: number;
+    changedFiles: number;
+    files: PullRequestFile[];
+    filesTruncated: boolean;
+}

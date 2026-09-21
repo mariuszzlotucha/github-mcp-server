@@ -1,9 +1,14 @@
-export { listIssues, getIssue, getLastRateLimit } from "./service.js";
+export { listIssues, getIssue, listPullRequests, getPullRequest, getLastRateLimit } from "./service.js";
 export type {
     IssueSummary,
     IssueDetail,
     IssueComment,
+    PullRequestSummary,
+    PullRequestDetail,
+    PullRequestFile,
     RateLimit,
     RawIssue,
-    RawComment
+    RawComment,
+    RawPullRequest,
+    RawPullRequestFile
 } from "./types.js";

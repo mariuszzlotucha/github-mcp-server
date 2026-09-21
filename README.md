@@ -1,6 +1,6 @@
 # github-mcp-server
 
-Serwer [MCP](https://modelcontextprotocol.io) udostępniający modelom dwa narzędzia tylko do odczytu, do przeglądania zgłoszeń (issues) w repozytoriach na GitHubie: `list_issues` i `get_issue`.
+Serwer [MCP](https://modelcontextprotocol.io) udostępniający modelom cztery narzędzia tylko do odczytu, do przeglądania zgłoszeń (issues) i pull requestów w repozytoriach na GitHubie: `list_issues`, `get_issue`, `list_pull_requests`, `get_pull_request`.
 
 ## Wymagania
 
@@ -39,8 +39,10 @@ Domyślny entrypoint (`src/server.ts`) serwuje przez stdio — do podpięcia pod
 
 - **`list_issues(repo, state?, labels?, limit?)`** — nagłówki zgłoszeń (numer, tytuł, autor, stan, etykiety, liczba komentarzy) bez treści. Pull requesty są odfiltrowane.
 - **`get_issue(repo, number)`** — pełna treść jednego zgłoszenia wraz z komentarzami, z obcinaniem długich treści.
+- **`list_pull_requests(repo, state?, limit?)`** — lista pull requestów: numer, tytuł, opis (obcięty do 300 znaków), autor, stan, URL.
+- **`get_pull_request(repo, number)`** — szczegóły PR-a: pełny opis, lista zmienionych plików z faktycznym diffem (`patch`) oraz liczbą dodanych/usuniętych linijek per plik i łącznie (`additions`/`deletions`/`changedFiles`). Diff pojedynczego pliku jest obcinany do 3000 znaków, a lista plików do 30 — flagi `patchTruncated`/`filesTruncated`/`descriptionTruncated` sygnalizują obcięcie.
 
-Oba narzędzia są oznaczone jako `readOnlyHint` i nie modyfikują niczego na GitHubie.
+Wszystkie narzędzia są oznaczone jako `readOnlyHint` i nie modyfikują niczego na GitHubie.
 
 ## Struktura projektu
 
@@ -52,13 +54,15 @@ src/
 │   ├── index.ts           # barrel: publiczne API modułu
 │   ├── client.ts            # fetch do GitHub REST API, obsługa rate limitu
 │   ├── mappers.ts             # mapowanie odpowiedzi API -> typy domenowe
-│   ├── service.ts               # listIssues / getIssue
-│   └── types.ts                  # typy Raw* (GitHub API) i Issue* (domenowe)
+│   ├── service.ts               # listIssues / getIssue / listPullRequests / getPullRequest
+│   └── types.ts                  # typy Raw* (GitHub API) i Issue*/PullRequest* (domenowe)
 ├── tools/                # rejestracja narzędzi MCP
 │   ├── index.ts             # barrel: rejestratory narzędzi
 │   ├── descriptions.ts        # opisy narzędzi dla modelu
 │   ├── list-issues.ts
 │   ├── get-issue.ts
+│   ├── list-pull-requests.ts
+│   ├── get-pull-request.ts
 │   ├── schemas.ts               # współdzielone schematy zod
 │   └── result.ts                 # helpery jsonResult/errorResult
 └── utils/

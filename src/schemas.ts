@@ -1,0 +1,15 @@
+import z from "zod";
+
+export const repoField = z.string().describe('Repozytorium w formacie właściciel/nazwa');
+
+export const summarySchema = z.object({
+  number: z.number(),
+  title: z.string(),
+  state: z.string(),
+  author: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  labels: z.array(z.string()),
+  commentCount: z.number(),
+  url: z.string()
+});

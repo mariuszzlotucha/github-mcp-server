@@ -3,19 +3,14 @@ import type { McpServer } from "@modelcontextprotocol/server";
 import { listIssues, getLastRateLimit } from "../github.js";
 import { repoField, summarySchema } from "../schemas.js";
 import { readOnlyAnnotations, jsonResult, errorResult } from "../tool-result.js";
+import { listIssuesDescription } from "./descriptions.js";
 
 export function registerListIssuesTool(server: McpServer): void {
     server.registerTool(
         'list_issues',
         {
             title: 'Lista zgłoszeń',
-            description:
-                'Zwraca nagłówki zgłoszeń z repozytorium na GitHubie: numer, tytuł, autora, stan, etykiety ' +
-                'i liczbę komentarzy - BEZ treści. ' +
-                'Użyj tego jako pierwszego kroku, gdy użytkownik pyta o zgłoszenia, błędy lub prośby o funkcje: ' +
-                'najpierw obejrzyj nagłówki, potem pobierz treść tylko tych, które są naprawdę potrzebne. ' +
-                'Pull requesty są automatycznie odfiltrowane - zwracane są wyłącznie zgłoszenia. ' +
-                'Repozytorium podaje się w formacie wlasciciel/nazwa, np. "modelcontextprotocol/servers".',
+            description: listIssuesDescription,
             inputSchema: z.object({
                 repo: repoField,
                 state: z.enum(['open', 'closed', 'all'])
